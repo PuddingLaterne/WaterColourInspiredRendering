@@ -5,19 +5,33 @@ Shader "Custom/Watercolor"
 	Properties
 	{
 		_Noise ("Noise", 3D) = "white" {}
-		_HighlightColor("Highlight Color", Color) = (1.0, 1.0, 1.0, 1.0)
+		_NoiseInfluence("Noise Influence", Range(0, 1.0)) = 0.5
+
+		_Texture("Color Texture", 2D) = "grey" {}
 		_BaseColor("Base Color", Color) = (0.6, 0.6, 0.6, 1.0)
-		_ShadowColor("Shadow Color", Color) = (0.1, 0.1, 0.1, 1.0)
+
 		_HighlightThreshold("Highlight Threshold", Range(0, 1.0)) = 0.8
 		_HighlightSoftness("Highlight Softness", Range(0, 1.0)) = 0.1
+		_HighlightTint("Highlight Tint", Color) = (1.0, 1.0, 1.0, 1.0)
+		_HighlightTintStrength("Highlight Tint Strength", Range(0, 1.0)) = 0.5
+
 		_ShadowThreshold("Shadow Threshold", Range(0, 1.0)) = 0.4
 		_ShadowSoftness("Shadow Softness", Range(0, 1.0)) = 0.1
-		_EdgeDarkening("Edge Darkening", Range(0, 1.0)) = 0.5
-		_NoiseDarkening("Noise Darkening", Range(0, 5.0)) = 1.0
-		_MinLineThickness("Min Line Thickness", Range(0, 0.05)) = 0.0
-		_MaxLineThickness("Max Line Thickness", Range(0, 0.05)) = 0.05
-		_LineColorLight("Line Color Light", Color) = (1.0, 1.0, 1.0, 0.5)
-		_LineColorDark("Line Color Dark", Color) = (0.0, 0.0, 0.0, 0.5)
+		_ShadowTint("Shadow Tint", Color) = (0.0, 0.0, 0.0, 1.0)
+		_ShadowTintStrength("Shadow Tint Strength", Range(0, 1.0)) = 0.5
+
+		_SpecularHighlightColor("Specular Highlight Color", Color) = (1.0, 1.0, 1.0, 1.0)
+		_Specularity("Specularity", float) = 8.0
+		_SpecularThreshold("Specular Threshold", Range(0, 1.0)) = 0.8
+		_SpecularSoftness("Specular Softness", Range(0, 1.0)) = 0.1
+
+		_Bias("Fresnel Bias", float) = 0.0
+		_Power("Fresnel Power", float) = 2.0
+		_Scale("Fresnel Scale", float) = 0.5
+
+		_MinOutlineThickness("Minimum OutlineThickness", float) = 0.1
+		_MaxOutlineThickness("Maximum Outline Thickness", float) = 0.2
+		_OutlineColor("Outline Color", Color) = (0.0, 0.0, 0.0, 1.0)
 	}
 	SubShader
 	{
@@ -56,26 +70,57 @@ Shader "Custom/Watercolor"
 				fixed3 noiseUV : TEXCOORD1;
 				fixed intensity : TEXCOORD2;
 				SHADOW_COORDS(3)
+
+				float3 n : TEXCOORD4;
+				float3 v : TEXCOORD5;
+				float3 l : TEXCOORD6;
 			};
 
 			sampler3D _Noise;
+			fixed _NoiseInfluence;
+
+			sampler2D _Texture;
 
 			fixed4 _BaseColor;
-			fixed4 _HighlightColor;
-			fixed4 _ShadowColor;
 
 			fixed _HighlightThreshold;
 			fixed _HighlightSoftness;
+			fixed4 _HighlightTint;
+			fixed _HighlightTintStrength;
 
 			fixed _ShadowThreshold;
 			fixed _ShadowSoftness;
+			fixed4 _ShadowTint;
+			fixed _ShadowTintStrength;
 
-			fixed _EdgeDarkening;
-			fixed _NoiseDarkening;
+			fixed _Bias;
+			fixed _Power;
+			fixed _Scale;
+
+			fixed _Specularity;
+			fixed4 _SpecularHighlightColor;
+			fixed _SpecularThreshold;
+			fixed _SpecularSoftness;
 
 			fixed4 darken(fixed4 color, fixed factor)
 			{
 				return  color - (color - color * color) * factor;
+			}
+
+			float specular(float3 normal, float3 light, float3 view)
+			{
+				float3 reflected = reflect(-light, normal);
+				return pow(max(0, dot(reflected, view)), _Specularity);
+			}
+
+			fixed4 changeDensity(fixed4 color, fixed density)
+			{
+				return color - (color - pow(color, 2.0))*(density - 1.0);
+			}
+
+			fixed map(fixed input, fixed threshold, fixed softness)
+			{
+				return lerp(0.0, 1.0, smoothstep(threshold - softness, threshold + softness, input));
 			}
 
 			vertexOutput vert (vertexInput i)
@@ -87,10 +132,11 @@ Shader "Custom/Watercolor"
 				o.noiseUV = (i.vertex.xyz + 1.0) / 2.0;
 
 				float3 worldPos = mul(unity_ObjectToWorld, i.vertex);
-				float3 normal = normalize(UnityObjectToWorldNormal(i.normal));
+				float3 n = normalize(UnityObjectToWorldNormal(i.normal));
 				float3 l = normalize(_WorldSpaceLightPos0.xyz);
-				o.intensity = dot(l, normal) * _LightColor0.r;
-
+				float3 v = normalize(WorldSpaceViewDir(i.vertex));
+				//o.intensity += specular(n, l, v);
+				/*
 				for (int i = 0; i < 4; i++)
 				{
 					float3 lightPos = float3(unity_4LightPosX0[i], unity_4LightPosY0[i], unity_4LightPosZ0[i]);
@@ -99,7 +145,10 @@ Shader "Custom/Watercolor"
 					l = normalize(lightPos - worldPos);
 					o.intensity += dot(l, normal) * (1.0 / (1.0 + unity_4LightAtten0[i] * squaredDistance)) * unity_LightColor[i].r;
 				}
-				o.intensity = clamp(o.intensity, 0.0, 1.0);
+				*/
+				o.n = n;
+				o.l = l;
+				o.v = v;
 				
 				TRANSFER_SHADOW(o);
 
@@ -108,31 +157,44 @@ Shader "Custom/Watercolor"
 			
 			half4 frag (vertexOutput i) : COLOR
 			{
-				fixed n = tex3D(_Noise, i.noiseUV);
-				fixed intensity = i.intensity * SHADOW_ATTENUATION(i);
-				intensity = intensity * n + intensity * 0.2;
+				half4 color = tex2D(_Texture, i.uv) * _BaseColor;
 
-				fixed shadowEdge = 1.0 - smoothstep(0.0, _ShadowSoftness, abs(intensity - _ShadowThreshold));
+				float3 n = normalize(i.n);
+				float3 v = normalize(i.v);
+				float3 l = normalize(i.l);
 
-				fixed highlight = lerp(0.0, 1.0, smoothstep(_HighlightThreshold - _HighlightSoftness, _HighlightThreshold + _HighlightSoftness, intensity));
-				intensity = lerp(0.0, 0.5, smoothstep(_ShadowThreshold - _ShadowSoftness, _ShadowThreshold + _ShadowSoftness, intensity));
-				intensity += highlight;
+				fixed noise = tex3D(_Noise, i.noiseUV);
+
+				fixed shadow = SHADOW_ATTENUATION(i);
+
+				fixed intensity = max(0.0, dot(n, l)) * shadow;
+				intensity = intensity * noise + intensity * 0.2;
 				intensity = clamp(intensity, 0.0, 1.0);
 
-				fixed4 color = _BaseColor;
+				fixed highlight = lerp(0.0, 0.5, smoothstep(_HighlightThreshold - _HighlightSoftness, _HighlightThreshold + _HighlightSoftness, intensity));
+				intensity = lerp(0.0, 0.5, smoothstep(_ShadowThreshold - _ShadowSoftness, _ShadowThreshold + _ShadowSoftness, intensity));
+				intensity += highlight;
+				intensity += ((noise * 2.0) - 1.0) * _NoiseInfluence;
+				intensity = clamp(intensity, 0.0, 1.0);
 
-				color = lerp(color, _HighlightColor, max(0.0, intensity - 0.5) * 2.0);
-				color = lerp(_ShadowColor, color, min(1.0, intensity * 2.0));
+				fixed fresnel = _Bias + _Scale * pow(1.0 + (1.0 - abs(dot(v, n))), _Power);
+				fresnel *= (1.0 - noise);
+				fresnel = clamp(fresnel, 0.0, 1.0);
 
-				color = darken(color, n * _NoiseDarkening);
-				color = darken(color, shadowEdge * _EdgeDarkening);
+				color = lerp(color, _HighlightTint, _HighlightTintStrength * max((intensity - 0.5), 0.0) * 2.0);
+				color = lerp(_ShadowTint, color, 1.0 - _ShadowTintStrength * abs(min(intensity - 0.5, 0.0)) * 2.0);
+
+				color = changeDensity(color, (1.0 - intensity) * 2.0);
+				color = changeDensity(color, fresnel + 1.0);
+
+				fixed spec = specular(n, l, v) * shadow;
+				spec = map(spec, _SpecularThreshold, _SpecularSoftness);
+				color = lerp(color, _SpecularHighlightColor, spec);
+
                 return color;
 			}
 			ENDCG
 		}
-
-
-		UsePass "Legacy Shaders/VertexLit/SHADOWCASTER"
 
 		Pass
 		{
@@ -145,15 +207,13 @@ Shader "Custom/Watercolor"
 			#pragma fragment frag
 			#include "UnityCG.cginc"
 
-			fixed _MinLineThickness;
-			fixed _MaxLineThickness;
-			fixed4 _LineColorLight;
-			fixed4 _LineColorDark;
+			fixed _MinOutlineThickness;
+			fixed _MaxOutlineThickness;
+			fixed4 _OutlineColor;
 
 			struct vertexOutput
 			{
 				float4 pos : SV_POSITION;
-				fixed4 lineColor : TEXCOORD0;
 			};
 
 			struct fragmentOutput
@@ -165,21 +225,22 @@ Shader "Custom/Watercolor"
 			{
 				vertexOutput o;
 				fixed lighting = max(0.0, dot(normalize(UnityObjectToWorldNormal(i.normal)), normalize(_WorldSpaceLightPos0.xyz)));
-				fixed lineThickness = lerp(_MinLineThickness, _MaxLineThickness, 1.0 - lighting);
+				fixed lineThickness = lerp(_MinOutlineThickness, _MaxOutlineThickness, 1.0 - lighting);
 				o.pos = UnityObjectToClipPos(i.vertex + normalize(i.normal) * lineThickness);
-				o.lineColor = lerp(_LineColorDark, _LineColorLight, lighting);
 				return o;
 			}
 
 			fragmentOutput frag(vertexOutput i)
 			{
 				fragmentOutput o;
-				o.color = i.lineColor;
+				o.color = _OutlineColor;
 				return o;
 			}
 
-			ENDCG
+		ENDCG
 		}
+
+		UsePass "Legacy Shaders/VertexLit/SHADOWCASTER"
 
 	}
 
