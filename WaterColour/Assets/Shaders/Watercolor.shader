@@ -9,6 +9,7 @@ Shader "Custom/Watercolor"
 
 		_Texture("Color Texture", 2D) = "grey" {}
 		_BaseColor("Base Color", Color) = (0.6, 0.6, 0.6, 1.0)
+		_IntensityInfluence("Intensity Influence", Range(0.0, 1.0)) = 1.0
 
 		_HighlightThreshold("Highlight Threshold", Range(0, 1.0)) = 0.8
 		_HighlightSoftness("Highlight Softness", Range(0, 1.0)) = 0.1
@@ -25,11 +26,7 @@ Shader "Custom/Watercolor"
 		_SpecularThreshold("Specular Threshold", Range(0, 1.0)) = 0.8
 		_SpecularSoftness("Specular Softness", Range(0, 1.0)) = 0.1
 
-		_Bias("Fresnel Bias", float) = 0.0
-		_Power("Fresnel Power", float) = 2.0
-		_Scale("Fresnel Scale", float) = 0.5
-
-		_MinOutlineThickness("Minimum OutlineThickness", Range(0.0, 0.1)) = 0.1
+		_MinOutlineThickness("Minimum Outline Thickness", Range(0.0, 0.1)) = 0.1
 		_MaxOutlineThickness("Maximum Outline Thickness", Range(0.0, 0.1)) = 0.2
 		_OutlineOpacity("Outline Opacity", Range(0.0, 1.0)) = 0.5
 		_OutlinePos("Outline Position", Range(0.0, 1.0)) = 0.5
@@ -69,7 +66,6 @@ Shader "Custom/Watercolor"
 			    float4 pos : SV_POSITION;
 				fixed2 uv : TEXCOORD0;
 				fixed3 noiseUV : TEXCOORD1;
-				fixed intensity : TEXCOORD2;
 				SHADOW_COORDS(3)
 
 				float3 n : TEXCOORD4;
@@ -83,6 +79,7 @@ Shader "Custom/Watercolor"
 			sampler2D _Texture;
 
 			fixed4 _BaseColor;
+			fixed _IntensityInfluence;
 
 			fixed _HighlightThreshold;
 			fixed _HighlightSoftness;
@@ -93,10 +90,6 @@ Shader "Custom/Watercolor"
 			fixed _ShadowSoftness;
 			fixed4 _ShadowTint;
 			fixed _ShadowTintStrength;
-
-			fixed _Bias;
-			fixed _Power;
-			fixed _Scale;
 
 			fixed _Specularity;
 			fixed4 _SpecularHighlightColor;
@@ -178,15 +171,10 @@ Shader "Custom/Watercolor"
 				intensity += ((noise * 2.0) - 1.0) * _NoiseInfluence;
 				intensity = clamp(intensity, 0.0, 1.0);
 
-				fixed fresnel = _Bias + _Scale * pow(1.0 + (1.0 - abs(dot(v, n))), _Power);
-				fresnel *= (1.0 - noise);
-				fresnel = clamp(fresnel, 0.0, 1.0);
-
 				color = lerp(color, _HighlightTint, _HighlightTintStrength * max((intensity - 0.5), 0.0) * 2.0);
 				color = lerp(_ShadowTint, color, 1.0 - _ShadowTintStrength * abs(min(intensity - 0.5, 0.0)) * 2.0);
 
-				color = changeDensity(color, (1.0 - intensity) * 2.0);
-				color = changeDensity(color, fresnel + 1.0);
+				color = changeDensity(color, 1.0 + ((1.0 - intensity - 0.5) * 2.0 * _IntensityInfluence));
 
 				fixed spec = specular(n, l, v) * shadow;
 				spec = map(spec, _SpecularThreshold, _SpecularSoftness);

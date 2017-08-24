@@ -8,8 +8,8 @@
 	{
 		Tags 
 		{ 
-			"RenderType"="Opaque" 
 			"Outline" = "Default"
+			"LightMode" = "ForwardBase"
 		}
 		LOD 100
 
@@ -70,7 +70,6 @@
 				float4 vertex : SV_POSITION;
 			};
 
-			fixed4 _OutlineColor;
 			fixed _OutlineOpacity;
 			fixed _OutlinePos;
 			fixed _MinOutlineThickness;
