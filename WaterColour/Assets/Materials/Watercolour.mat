@@ -82,7 +82,7 @@ Material:
     - _HighlightThreshold: 0.694
     - _HighlightTintStrength: 0
     - _MaxLineThickness: 0
-    - _MaxOutlineThickness: 0.02
+    - _MaxOutlineThickness: 0.0309
     - _Metallic: 0
     - _MinLineThickness: 0
     - _MinOutlineThickness: 0
@@ -90,6 +90,8 @@ Material:
     - _NoiseDarkening: 1.16
     - _NoiseInfluence: 0.226
     - _OcclusionStrength: 1
+    - _OutlineOpacity: 0.204
+    - _OutlinePos: 0
     - _Parallax: 0.02
     - _Power: 8
     - _Scale: 0.05

@@ -51,8 +51,8 @@
 
 				fixed4 col = tex2D(_MainTex, distortedUV);
 				fixed4 outline = tex2D(_OutlineTex, distortedUV);
-				col = col - (col - pow(col, 2.0)) * (1.0 - outline);
-
+				col = (col - (col - pow(col, 2.0)) * (1.0 - outline)) * 0.5 + col * outline * 0.5;
+						
 				fixed lum = Luminance(col);
 				fixed4 paperCol = tex2D(_PaperTex, i.uv);
 
