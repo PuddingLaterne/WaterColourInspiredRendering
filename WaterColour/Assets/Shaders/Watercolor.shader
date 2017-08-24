@@ -4,7 +4,7 @@ Shader "Custom/Watercolor"
 {
 	Properties
 	{
-		_Noise ("Noise", 3D) = "white" {}
+		_Noise("Noise", 3D) = "white" {}
 		_NoiseInfluence("Noise Influence", Range(0, 1.0)) = 0.5
 
 		_Texture("Color Texture", 2D) = "grey" {}
@@ -29,9 +29,10 @@ Shader "Custom/Watercolor"
 		_Power("Fresnel Power", float) = 2.0
 		_Scale("Fresnel Scale", float) = 0.5
 
-		_MinOutlineThickness("Minimum OutlineThickness", float) = 0.1
-		_MaxOutlineThickness("Maximum Outline Thickness", float) = 0.2
-		_OutlineColor("Outline Color", Color) = (0.0, 0.0, 0.0, 1.0)
+		_MinOutlineThickness("Minimum OutlineThickness", Range(0.0, 0.1)) = 0.1
+		_MaxOutlineThickness("Maximum Outline Thickness", Range(0.0, 0.1)) = 0.2
+		_OutlineOpacity("Outline Opacity", Range(0.0, 1.0)) = 0.5
+		_OutlinePos("Outline Position", Range(0.0, 1.0)) = 0.5
 	}
 	SubShader
 	{
@@ -39,13 +40,13 @@ Shader "Custom/Watercolor"
 		{ 
 			"RenderType" = "Opaque" 
 			"LightMode" = "ForwardBase" 
-			"Replace" = "Full"
+			"Outline" = "Default"
 		}
 		LOD 100
 		
 		Pass
 		{
-			Tags{"Replace" = "Full"}
+			Tags{"Outline" = "Default"}
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag

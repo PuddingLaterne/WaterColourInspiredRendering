@@ -18,10 +18,12 @@ public class WaterColorPostProcessing : MonoBehaviour
     public float Distortion = 0.5f;  
 
     private Material mat;
+    private OutlineRendererCamera outlineRenderer;
 
     public void Awake()
     {
         mat = new Material(Shader);
+        outlineRenderer = FindObjectOfType<OutlineRendererCamera>();
         SetShaderValues();
     }
 
@@ -31,6 +33,7 @@ public class WaterColorPostProcessing : MonoBehaviour
         if (UpdateAtRuntime)
             SetShaderValues();
 
+        mat.SetTexture("_OutlineTex", outlineRenderer.Target);
         Graphics.Blit(source, destination, mat);
     }
 
