@@ -7,7 +7,7 @@
 	SubShader
 	{
 		Tags 
-		{ 
+		{			
 			"Outline" = "Default"
 			"LightMode" = "ForwardBase"
 		}
@@ -45,13 +45,12 @@
 
 			fixed4 frag(vertexOutput i) : SV_Target
 			{
-				fixed4 col = fixed4(1.0, 1.0, 1.0, 1.0);
+				fixed4 col = fixed4(0.5, 0.5, 0.5, 1.0);
 				return col;
 			}
 
 			ENDCG
 		}
-
 
 		Pass
 		{
@@ -86,10 +85,47 @@
 			
 			fixed4 frag (vertexOutput i) : SV_Target
 			{
-				fixed4 col = fixed4(0.0, 0.0, 0.0, _OutlineOpacity);
+				fixed4 col = fixed4(1.0, 1.0, 1.0, _OutlineOpacity);
 				return col;
 			}
 			ENDCG
 		}
+
+		Pass
+		{
+			Cull Front
+			Blend SrcAlpha OneMinusSrcAlpha
+
+			CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+
+			#include "UnityCG.cginc"
+
+			struct vertexOutput
+			{
+				float4 vertex : SV_POSITION;
+			};
+
+			fixed _OutlineOpacity;
+
+			vertexOutput vert(appdata_base i)
+			{
+				vertexOutput o;
+				o.vertex = UnityObjectToClipPos(i.vertex);
+				return o;
+			}
+
+			fixed4 frag(vertexOutput i) : SV_Target
+			{
+				fixed4 col = fixed4(0.0, 0.0, 0.0, _OutlineOpacity);
+				return col;
+			}
+			
+			ENDCG
+		
+		}
+
+	
 	}
 }

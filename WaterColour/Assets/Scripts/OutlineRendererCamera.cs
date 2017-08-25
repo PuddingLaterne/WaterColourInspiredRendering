@@ -22,7 +22,7 @@ public class OutlineRendererCamera : MonoBehaviour
         cam = GetComponent<Camera>();
         cam.CopyFrom(Camera.main);
         cam.clearFlags = CameraClearFlags.SolidColor;
-        cam.backgroundColor = Color.white;
+        cam.backgroundColor = new Color(0.5f, 0.5f, 0.5f, 1.0f);
     }
 
     private void CreateRenderTexture()
