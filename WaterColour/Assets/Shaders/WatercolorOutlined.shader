@@ -3,6 +3,7 @@
 	Properties
 	{
 		_Noise("Noise", 3D) = "white" {}
+		_NoiseScale("Noise Scaling", float) = 1.0
 		_BaseNoiseInfluence("Base Influence", Range(0, 1.0)) = 0.5
 		_AdditionalNoiseInfluence("Additional Influence", Range(0, 1.0)) = 0.5
 

@@ -3,6 +3,7 @@
 	Properties
 	{
 		_Noise("Noise", 3D) = "white" {}
+		_NoiseScale("Noise Scaling", float) = 1.0
 		_BaseNoiseInfluence("Base Influence", Range(0, 1.0)) = 0.5
 		_AdditionalNoiseInfluence("Additional Influence", Range(0, 1.0)) = 0.5
 
@@ -45,7 +46,7 @@
 
 			#pragma multi_compile_fwdbase nolightmap nodirlightmap nodynlightmap novertexlight
 			#pragma shader_feature SPECULAR_ON
-			#pragma multi_compile COLOR_TEXTURE COLOR_SIMPLE
+			#pragma multi_compile COLOR_SIMPLE COLOR_TEXTURE 
 
 			#include "UnityCG.cginc"
 			#include "Lighting.cginc"
@@ -71,6 +72,7 @@
 			};
 
 			sampler3D _Noise;
+			fixed _NoiseScale;
 			fixed _BaseNoiseInfluence;
 			fixed _AdditionalNoiseInfluence;
 
@@ -121,7 +123,7 @@
                 o.pos = UnityObjectToClipPos(i.vertex);
 
 				o.uv = i.texcoord.xy;
-				o.noiseUV = (i.vertex.xyz + 1.0) / 2.0;
+				o.noiseUV = (i.vertex.xyz + _NoiseScale) / (_NoiseScale * 2.0);
 
 				float3 worldPos = mul(unity_ObjectToWorld, i.vertex);
 				float3 n = normalize(UnityObjectToWorldNormal(i.normal));

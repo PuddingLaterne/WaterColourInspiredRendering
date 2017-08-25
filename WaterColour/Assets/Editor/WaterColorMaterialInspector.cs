@@ -62,6 +62,7 @@ public class WaterColorMaterialInspector : MaterialEditor
 
         EditorGUILayout.LabelField("Noise", headerStyle);
         ShaderProperty(GetMaterialProperty(matArray, "_Noise"), "Texture");
+        ShaderProperty(GetMaterialProperty(matArray, "_NoiseScale"), "Noise Scale");
         ShaderProperty(GetMaterialProperty(matArray, "_BaseNoiseInfluence"), "Base Influence");
         ShaderProperty(GetMaterialProperty(matArray, "_AdditionalNoiseInfluence"), "Additional Influence");
 
