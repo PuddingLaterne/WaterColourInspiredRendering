@@ -55,8 +55,6 @@
 		Pass
 		{
 			Cull Front
-			Blend SrcAlpha OneMinusSrcAlpha
-			ZWrite Off
 
 			CGPROGRAM
 			#pragma vertex vert
@@ -75,6 +73,7 @@
 			fixed _OutlinePos;
 			fixed _MinOutlineThickness;
 			fixed _MaxOutlineThickness;
+			fixed _OuterLineBrightness;
 
 			vertexOutput vert (appdata_base i)
 			{
@@ -90,7 +89,9 @@
 			{
 				fixed4 fogColor = fixed4(0.0, 0.0, 0.0, 1.0);
 				UNITY_APPLY_FOG(i.fogCoord, fogColor);
-				fixed4 col = fixed4(1.0, 1.0, 1.0, _OutlineOpacity * (1.0 - fogColor.r));
+				fixed opacity = _OutlineOpacity * (1.0 - fogColor.r);
+				fixed4 col = fixed4(_OuterLineBrightness, _OuterLineBrightness, _OuterLineBrightness, 1.0);
+				col = lerp(fixed4(0.5, 0.5, 0.5, 1.0), col, opacity);
 				return col;
 			}
 			ENDCG
@@ -99,7 +100,6 @@
 		Pass
 		{
 			Cull Front
-			Blend SrcAlpha OneMinusSrcAlpha
 
 			CGPROGRAM
 			#pragma vertex vert
@@ -115,6 +115,7 @@
 			};
 
 			fixed _OutlineOpacity;
+			fixed _InnerLineBrightness;
 
 			vertexOutput vert(appdata_base i)
 			{
@@ -128,7 +129,9 @@
 			{
 				fixed4 fogColor = fixed4(0.0, 0.0, 0.0, 1.0);
 				UNITY_APPLY_FOG(i.fogCoord, fogColor);
-				fixed4 col = fixed4(0.0, 0.0, 0.0, _OutlineOpacity * (1.0 - fogColor.r));
+				fixed opacity = _OutlineOpacity * (1.0 - fogColor.r);
+				fixed4 col = fixed4(_InnerLineBrightness, _InnerLineBrightness, _InnerLineBrightness, 1.0);
+				col = lerp(fixed4(0.5, 0.5, 0.5, 1.0), col, opacity);
 				return col;
 			}
 			

@@ -115,6 +115,8 @@ public class WaterColorMaterialInspector : MaterialEditor
             ShaderProperty(GetMaterialProperty(matArray, "_MaxOutlineThickness"), "Maximum Thickness");
             ShaderProperty(GetMaterialProperty(matArray, "_OutlineOpacity"), "Opacity");
             ShaderProperty(GetMaterialProperty(matArray, "_OutlinePos"), "Position");
+            ShaderProperty(GetMaterialProperty(matArray, "_OuterLineBrightness"), "Outer Line Brightness");
+            ShaderProperty(GetMaterialProperty(matArray, "_InnerLineBrightness"), "Inner Line Brightness");
         }
     }
 }

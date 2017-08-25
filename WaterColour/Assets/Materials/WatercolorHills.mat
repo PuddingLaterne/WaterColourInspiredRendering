@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: WatercolorHills
-  m_Shader: {fileID: 4800000, guid: 1cb1d0014d9c3e047b952f19e46dff63, type: 3}
+  m_Shader: {fileID: 4800000, guid: 4c1701a8cd1febb4ca1cb0df7ec45f6d, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -76,11 +76,17 @@ Material:
     - _HighlightSoftness: 0.315
     - _HighlightThreshold: 1
     - _HighlightTintStrength: 0
-    - _IntensityInfluence: 0.781
+    - _InnerLineBrightness: 1
+    - _IntensityInfluence: 0.722
+    - _MaxOutlineThickness: 0.0293
     - _Metallic: 0
+    - _MinOutlineThickness: 0
     - _Mode: 0
     - _NoiseScale: 1
     - _OcclusionStrength: 1
+    - _OuterLineBrightness: 1
+    - _OutlineOpacity: 0.62
+    - _OutlinePos: 0.485
     - _Parallax: 0.02
     - _ShadowSoftness: 0.188
     - _ShadowThreshold: 0.536

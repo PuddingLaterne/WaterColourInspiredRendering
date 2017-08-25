@@ -76,6 +76,7 @@ Material:
     - _HighlightSoftness: 0.249
     - _HighlightThreshold: 0.682
     - _HighlightTintStrength: 0.17
+    - _InnerLineBrightness: 0
     - _IntensityInfluence: 0.301
     - _MaxOutlineThickness: 0.0546
     - _Metallic: 0
@@ -83,8 +84,9 @@ Material:
     - _Mode: 0
     - _NoiseScale: 3.26
     - _OcclusionStrength: 1
-    - _OutlineOpacity: 0.77
-    - _OutlinePos: 0.299
+    - _OuterLineBrightness: 1
+    - _OutlineOpacity: 0.699
+    - _OutlinePos: 0.611
     - _Parallax: 0.02
     - _ShadowSoftness: 0.165
     - _ShadowThreshold: 0.3

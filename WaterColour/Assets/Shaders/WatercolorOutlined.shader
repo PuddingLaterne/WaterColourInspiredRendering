@@ -33,6 +33,8 @@
 		_MaxOutlineThickness("Maximum Outline Thickness", Range(0.0, 0.1)) = 0.1
 		_OutlineOpacity("Outline Opacity", Range(0.0, 1.0)) = 0.5
 		_OutlinePos("Outline Position", Range(0.0, 1.0)) = 0.5
+		_OuterLineBrightness("Outer Line Brightness", Range(0.0, 1.0)) = 1.0
+		_InnerLineBrightness("Inner Line Brightness", Range(0.0, 1.0)) = 0.0
 	}
 
 	SubShader
