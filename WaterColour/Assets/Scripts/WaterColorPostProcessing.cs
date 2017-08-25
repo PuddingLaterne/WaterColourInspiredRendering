@@ -15,7 +15,8 @@ public class WaterColorPostProcessing : MonoBehaviour
     [Range(0, 1f)]
     public float MaxLuminance = 0.8f;
     [Range(0, 1f)]
-    public float Distortion = 0.5f;  
+    public float Distortion = 0.5f;
+    public bool BlurOutlines = true;
 
     private Material mat;
     private OutlineRendererCamera outlineRenderer;
@@ -39,6 +40,16 @@ public class WaterColorPostProcessing : MonoBehaviour
 
     private void SetShaderValues()
     {
+        if(BlurOutlines)
+        {
+            mat.EnableKeyword("OUTLINE_BLUR_ON");
+            mat.DisableKeyword("OUTLINE_BLUR_OFF");
+        }
+        else
+        {
+            mat.EnableKeyword("OUTLINE_BLUR_OFF");
+            mat.DisableKeyword("OUTLINE_BLUR_ON");
+        }
         mat.SetTexture("_PaperTex", PaperTexture);
         mat.SetTexture("_PaperNormalTex", PaperNormal);
         mat.SetFloat("_Darkening", Darkening);
