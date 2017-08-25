@@ -102,6 +102,11 @@ public class WaterColorMaterialInspector : MaterialEditor
             ShaderProperty(GetMaterialProperty(matArray, "_SpecularSoftness"), "Softness");
         }
 
+        EditorGUILayout.Separator();
+        EditorGUILayout.LabelField("Distance fade", headerStyle);
+        ShaderProperty(GetMaterialProperty(matArray, "_FadeStrength"), "Strength");
+        ShaderProperty(GetMaterialProperty(matArray, "_FadeColor"), "Color");
+
         if (mat.HasProperty("_OutlineOpacity"))
         {
             EditorGUILayout.Separator();

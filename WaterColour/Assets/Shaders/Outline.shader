@@ -61,12 +61,14 @@
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
+			#pragma multi_compile_fog
 			
 			#include "UnityCG.cginc"
 
 			struct vertexOutput
 			{
 				float4 vertex : SV_POSITION;
+				UNITY_FOG_COORDS(0)
 			};
 
 			fixed _OutlineOpacity;
@@ -80,12 +82,15 @@
 				fixed lighting = max(0.0, dot(normalize(UnityObjectToWorldNormal(i.normal)), normalize(_WorldSpaceLightPos0.xyz)));
 				fixed lineThickness = lerp(_MinOutlineThickness, _MaxOutlineThickness, 1.0 - lighting) * _OutlinePos;
 				o.vertex = UnityObjectToClipPos(i.vertex + normalize(i.normal) * lineThickness);
+				UNITY_TRANSFER_FOG(o, o.vertex);
 				return o;
 			}
 			
 			fixed4 frag (vertexOutput i) : SV_Target
 			{
-				fixed4 col = fixed4(1.0, 1.0, 1.0, _OutlineOpacity);
+				fixed4 fogColor = fixed4(0.0, 0.0, 0.0, 1.0);
+				UNITY_APPLY_FOG(i.fogCoord, fogColor);
+				fixed4 col = fixed4(1.0, 1.0, 1.0, _OutlineOpacity * (1.0 - fogColor.r));
 				return col;
 			}
 			ENDCG
@@ -99,12 +104,14 @@
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
+			#pragma multi_compile_fog
 
 			#include "UnityCG.cginc"
 
 			struct vertexOutput
 			{
 				float4 vertex : SV_POSITION;
+				UNITY_FOG_COORDS(0)
 			};
 
 			fixed _OutlineOpacity;
@@ -113,12 +120,15 @@
 			{
 				vertexOutput o;
 				o.vertex = UnityObjectToClipPos(i.vertex);
+				UNITY_TRANSFER_FOG(o, o.vertex);
 				return o;
 			}
 
 			fixed4 frag(vertexOutput i) : SV_Target
 			{
-				fixed4 col = fixed4(0.0, 0.0, 0.0, _OutlineOpacity);
+				fixed4 fogColor = fixed4(0.0, 0.0, 0.0, 1.0);
+				UNITY_APPLY_FOG(i.fogCoord, fogColor);
+				fixed4 col = fixed4(0.0, 0.0, 0.0, _OutlineOpacity * (1.0 - fogColor.r));
 				return col;
 			}
 			

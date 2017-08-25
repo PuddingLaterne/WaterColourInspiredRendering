@@ -21,6 +21,9 @@
 		_ShadowTint("Shadow Tint", Color) = (0.0, 0.0, 0.0, 1.0)
 		_ShadowTintStrength("Shadow Tint Strength", Range(0, 1.0)) = 0.0
 
+		_FadeStrength("Fade Strength", Range(0, 1.0)) = 1.0
+		_FadeColor("Fade Color", Color) = (0.5, 0.5, 0.5, 1.0)
+
 		_SpecularHighlightColor("Specular Highlight Color", Color) = (1.0, 1.0, 1.0, 1.0)
 		_Specularity("Specularity", float) = 8.0
 		_SpecularThreshold("Specular Threshold", Range(0, 1.0)) = 0.8
@@ -45,6 +48,7 @@
 			#pragma fragment frag
 
 			#pragma multi_compile_fwdbase nolightmap nodirlightmap nodynlightmap novertexlight
+			#pragma multi_compile_fog
 			#pragma shader_feature SPECULAR_ON
 			#pragma multi_compile COLOR_SIMPLE COLOR_TEXTURE 
 
@@ -64,8 +68,8 @@
 			    float4 pos : SV_POSITION;
 				fixed2 uv : TEXCOORD0;
 				fixed3 noiseUV : TEXCOORD1;
+				UNITY_FOG_COORDS(2)
 				SHADOW_COORDS(3)
-
 				float3 n : TEXCOORD4;
 				float3 v : TEXCOORD5;
 				float3 l : TEXCOORD6;
@@ -90,6 +94,9 @@
 			fixed _ShadowSoftness;
 			fixed4 _ShadowTint;
 			fixed _ShadowTintStrength;
+
+			fixed _FadeStrength;
+			fixed4 _FadeColor;
 
 			fixed _Specularity;
 			fixed4 _SpecularHighlightColor;
@@ -134,6 +141,7 @@
 				o.l = l;
 				o.v = v;
 				
+				UNITY_TRANSFER_FOG(o, o.pos);
 				TRANSFER_SHADOW(o);
 
                 return o;
@@ -157,6 +165,10 @@
 
 				fixed shadow = SHADOW_ATTENUATION(i);
 
+				fixed4 fogColor = fixed4(0.0, 0.0, 0.0, 1.0);
+				UNITY_APPLY_FOG(i.fogCoord, fogColor);
+				fixed fog = 1.0 - fogColor.r;
+
 				fixed intensity = max(0.0, dot(n, l)) * shadow;
 				intensity += ((noise * 2.0) - 1.0) * _BaseNoiseInfluence;
 				fixed highlight = lerp(0.0, 0.5, smoothstep(_HighlightThreshold - _HighlightSoftness, _HighlightThreshold + _HighlightSoftness, intensity));
@@ -165,16 +177,18 @@
 				intensity += ((noise * 2.0) - 1.0) * _AdditionalNoiseInfluence;
 				intensity = clamp(intensity, 0.0, 1.0);
 
-				color = lerp(color, _HighlightTint, _HighlightTintStrength * max((intensity - 0.5), 0.0) * 2.0);
-				color = lerp(_ShadowTint, color, 1.0 - _ShadowTintStrength * abs(min(intensity - 0.5, 0.0)) * 2.0);
+				color = lerp(color, _HighlightTint, _HighlightTintStrength * fog * max((intensity - 0.5), 0.0) * 2.0);
+				color = lerp(_ShadowTint, color, 1.0 - _ShadowTintStrength * fog * abs(min(intensity - 0.5, 0.0)) * 2.0);
 
-				color = changeDensity(color, 1.0 + ((1.0 - intensity - 0.5) * 2.0 * _IntensityInfluence));
+				color = changeDensity(color, 1.0 + ((1.0 - intensity - 0.5) * 2.0 * _IntensityInfluence * fog));
 
 				#ifdef SPECULAR_ON
 				fixed spec = specular(n, l, v) * shadow;
 				spec = map(spec, _SpecularThreshold, _SpecularSoftness);
 				color = lerp(color, _SpecularHighlightColor, spec);
 				#endif
+
+				color = lerp(color, _FadeColor, (1.0 - fog) * _FadeStrength);
 
                 return color;
 			}

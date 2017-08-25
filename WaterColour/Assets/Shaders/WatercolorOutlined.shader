@@ -26,6 +26,9 @@
 		_SpecularThreshold("Specular Threshold", Range(0, 1.0)) = 0.8
 		_SpecularSoftness("Specular Softness", Range(0, 1.0)) = 0.1
 
+		_FadeStrength("Fade Strength", Range(0, 1.0)) = 1.0
+		_FadeColor("Fade Color", Color) = (0.5, 0.5, 0.5, 1.0)
+
 		_MinOutlineThickness("Minimum Outline Thickness", Range(0.0, 0.1)) = 0.05
 		_MaxOutlineThickness("Maximum Outline Thickness", Range(0.0, 0.1)) = 0.1
 		_OutlineOpacity("Outline Opacity", Range(0.0, 1.0)) = 0.5
