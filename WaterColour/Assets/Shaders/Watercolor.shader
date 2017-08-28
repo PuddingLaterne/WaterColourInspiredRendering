@@ -47,7 +47,7 @@
 			#pragma vertex vert
 			#pragma fragment frag
 
-			#pragma multi_compile_fwdbase nolightmap nodirlightmap nodynlightmap novertexlight
+			#pragma multi_compile_fwdbase
 			#pragma multi_compile_fog
 			#pragma shader_feature SPECULAR_ON
 			#pragma multi_compile COLOR_SIMPLE COLOR_TEXTURE 
@@ -73,6 +73,7 @@
 				float3 n : TEXCOORD4;
 				float3 v : TEXCOORD5;
 				float3 l : TEXCOORD6;
+				fixed vertexLighting : TEXCOORD7;
 			};
 
 			sampler3D _Noise;
@@ -140,6 +141,22 @@
 				o.n = n;
 				o.l = l;
 				o.v = v;
+
+				o.vertexLighting = 0.0;
+				for (int index = 0; index < 4; index++)
+				{
+					fixed3 lightPos = fixed3(unity_4LightPosX0[index],
+						unity_4LightPosY0[index],
+						unity_4LightPosZ0[index]);
+
+					fixed3 vertexToLight = lightPos - worldPos;
+					fixed3 lightDir = normalize(vertexToLight);
+
+					float squaredDistance = dot(vertexToLight, vertexToLight);
+					float attenuation = 1.0 / (1.0 + unity_4LightAtten0[index] * squaredDistance);
+					fixed strength = attenuation * unity_LightColor[index].r;
+					o.vertexLighting += strength * max(0.0, dot(n, lightDir));
+				}
 				
 				UNITY_TRANSFER_FOG(o, o.pos);
 				TRANSFER_SHADOW(o);
@@ -169,7 +186,7 @@
 				UNITY_APPLY_FOG(i.fogCoord, fogColor);
 				fixed fog = 1.0 - fogColor.r;
 
-				fixed intensity = max(0.0, dot(n, l)) * shadow;
+				fixed intensity = (max(0.0, dot(n, l)) * _LightColor0.r + i.vertexLighting) * shadow;
 				intensity += ((noise * 2.0) - 1.0) * _BaseNoiseInfluence;
 				fixed highlight = lerp(0.0, 0.5, smoothstep(_HighlightThreshold - _HighlightSoftness, _HighlightThreshold + _HighlightSoftness, intensity));
 				intensity = lerp(0.0, 0.5, smoothstep(_ShadowThreshold - _ShadowSoftness, _ShadowThreshold + _ShadowSoftness, intensity));
@@ -184,12 +201,12 @@
 
 				#ifdef SPECULAR_ON
 				fixed spec = specular(n, l, v) * shadow;
+
 				spec = map(spec, _SpecularThreshold, _SpecularSoftness);
 				color = lerp(color, _SpecularHighlightColor, spec);
 				#endif
 
 				color = lerp(color, _FadeColor, (1.0 - fog) * _FadeStrength);
-
                 return color;
 			}
 			ENDCG
