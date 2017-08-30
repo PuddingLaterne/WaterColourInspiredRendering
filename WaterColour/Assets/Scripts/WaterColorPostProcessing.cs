@@ -16,6 +16,14 @@ public class WaterColorPostProcessing : MonoBehaviour
     public float MaxLuminance = 0.8f;
     [Range(0, 1f)]
     public float Distortion = 0.5f;
+
+    [Header("Brightness")]
+    public Vector2 BrightnessOrigin = new Vector2(0.5f, 1.2f);
+    public float BrighteningFadeStart = 0.2f;
+    public float BrighteningFadeEnd = 0.8f;
+    public float BrighteningStrength = 0.5f;
+
+    [Header("Render Layers")]
     public bool BlurOutlines = true;
     public bool BlurBackground = true;
 
@@ -46,11 +54,17 @@ public class WaterColorPostProcessing : MonoBehaviour
     {
         SetKeyword(BlurOutlines, "OUTLINE_BLUR_ON", "OUTLINE_BLUR_OFF");
         SetKeyword(BlurBackground, "BG_BLUR_ON", "BG_BLUR_OFF");
+
         mat.SetTexture("_PaperTex", PaperTexture);
         mat.SetTexture("_PaperNormalTex", PaperNormal);
         mat.SetFloat("_Darkening", Darkening);
         mat.SetFloat("_MaxLuminance", MaxLuminance);
         mat.SetFloat("_Distortion", Distortion * 0.01f);
+
+        mat.SetVector("_BrightnessOrigin", BrightnessOrigin);
+        mat.SetFloat("_BrighteningFadeStart", BrighteningFadeStart);
+        mat.SetFloat("_BrighteningFadeEnd", BrighteningFadeEnd);
+        mat.SetFloat("_BrighteningStrength", BrighteningStrength);
     }
 
     private void SetKeyword(bool isActive, string keywordOn, string keywordOff)

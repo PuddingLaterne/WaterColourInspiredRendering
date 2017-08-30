@@ -47,6 +47,11 @@
 			fixed _Darkening;
 			fixed _Distortion;
 
+			fixed2 _BrightnessOrigin;
+			fixed _BrighteningFadeStart;
+			fixed _BrighteningFadeEnd;
+			fixed _BrighteningStrength;
+
 			fixed4 sampleAndInterpolate(sampler2D tex, fixed2 uv)
 			{
 				fixed offsetX = _ScreenParams.z - 1.0;
@@ -100,6 +105,13 @@
 
 				fixed4 combined = col * paperCol + col * 0.2;
 				col = lerp(col, combined, _Darkening * (1.0 - smoothstep(_MaxLuminance, 1.0, lum)));
+
+				fixed brightening = distance(_BrightnessOrigin, distortedUV);
+				brightening = 1.0 - smoothstep(_BrighteningFadeStart, _BrighteningFadeEnd, brightening);
+				brightening *= _BrighteningStrength;
+				
+				col = col - (col - pow(col, 2.0)) * (-brightening);
+
 				return col;
 			}
 			ENDCG
