@@ -40,7 +40,10 @@
 				vertexOutput o;
 				fixed lighting = max(0.0, dot(normalize(UnityObjectToWorldNormal(i.normal)), normalize(_WorldSpaceLightPos0.xyz)));
 				fixed lineThickness = lerp(_MinOutlineThickness, _MaxOutlineThickness, 1.0 - lighting) * (1.0 - _OutlinePos);
-				o.vertex = UnityObjectToClipPos(i.vertex - normalize(i.normal) * lineThickness);
+				float3 worldPos = mul(unity_ObjectToWorld, i.vertex);
+				float3 normal = UnityObjectToWorldNormal(i.normal);
+				float3 pos = worldPos - normalize(normal) * lineThickness;
+				o.vertex = mul(UNITY_MATRIX_VP, float4(pos, 1.0));
 				return o;
 			}
 
@@ -80,7 +83,11 @@
 				vertexOutput o;
 				fixed lighting = max(0.0, dot(normalize(UnityObjectToWorldNormal(i.normal)), normalize(_WorldSpaceLightPos0.xyz)));
 				fixed lineThickness = lerp(_MinOutlineThickness, _MaxOutlineThickness, 1.0 - lighting) * _OutlinePos;
-				o.vertex = UnityObjectToClipPos(i.vertex + normalize(i.normal) * lineThickness);
+
+				float3 worldPos = mul(unity_ObjectToWorld, i.vertex);
+				float3 normal = UnityObjectToWorldNormal(i.normal);
+				float3 pos = worldPos + normalize(normal) * lineThickness;
+				o.vertex = mul(UNITY_MATRIX_VP, float4(pos, 1.0));
 				return o;
 			}
 			
