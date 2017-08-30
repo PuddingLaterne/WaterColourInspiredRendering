@@ -16,6 +16,7 @@
 			
 			#include "UnityCG.cginc"
 			#pragma multi_compile OUTLINE_BLUR_ON OUTLINE_BLUR_OFF
+			#pragma multi_compile BG_BLUR_ON BG_BLUR_OFF
 
 			struct appdata
 			{
@@ -39,6 +40,7 @@
 			
 			sampler2D _MainTex;
 			sampler2D _OutlineTex;
+			sampler2D _BackgroundTex;
 			sampler2D _PaperTex;
 			sampler2D _PaperNormalTex;
 			fixed _MaxLuminance;
@@ -68,6 +70,18 @@
 				fixed2 distortedUV = i.uv + paperUV * _Distortion;
 
 				fixed4 col = tex2D(_MainTex, distortedUV);
+				fixed4 colBG = fixed4(0.0, 0.0, 0.0, 0.0);
+
+				#ifdef BG_BLUR_ON
+				colBG = sampleAndInterpolate(_BackgroundTex, distortedUV);		
+				#endif 
+
+				#ifdef BG_BLUR_OFF
+				colBG = tex2D(_BackgroundTex, distortedUV);
+				#endif
+
+				col = lerp(colBG, col, col.a);
+
 				fixed outline;
 
 				#ifdef OUTLINE_BLUR_ON	

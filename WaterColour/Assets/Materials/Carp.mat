@@ -8,7 +8,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: Carp
   m_Shader: {fileID: 4800000, guid: 4c1701a8cd1febb4ca1cb0df7ec45f6d, type: 3}
-  m_ShaderKeywords: COLOR_TEXTURE SPECULAR_ON
+  m_ShaderKeywords: COLOR_TEXTURE
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -63,34 +63,34 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _AdditionalNoiseInfluence: 0.501
-    - _BaseNoiseInfluence: 0.132
+    - _AdditionalNoiseInfluence: 0.51
+    - _BaseNoiseInfluence: 0.232
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _FadeStrength: 0
+    - _FadeStrength: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _HighlightSoftness: 0.358
     - _HighlightThreshold: 0.703
-    - _HighlightTintStrength: 0.31
+    - _HighlightTintStrength: 0.299
     - _InnerLineBrightness: 0
-    - _IntensityInfluence: 0.502
-    - _MaxOutlineThickness: 0.0245
+    - _IntensityInfluence: 0.406
+    - _MaxOutlineThickness: 0.0262
     - _Metallic: 0
-    - _MinOutlineThickness: 0.0106
+    - _MinOutlineThickness: 0.0093
     - _Mode: 0
     - _NoiseScale: 1
     - _OcclusionStrength: 1
     - _OuterLineBrightness: 0
-    - _OutlineOpacity: 0.58
-    - _OutlinePos: 0.297
+    - _OutlineOpacity: 1
+    - _OutlinePos: 0.322
     - _Parallax: 0.02
     - _ShadowSoftness: 0.075
     - _ShadowThreshold: 0.362
-    - _ShadowTintStrength: 0.477
+    - _ShadowTintStrength: 0.413
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SpecularSoftness: 0
@@ -102,7 +102,7 @@ Material:
     m_Colors:
     - _Color: {r: 0.8235294, g: 0.63460207, b: 0.35121107, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FadeColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - _HighlightTint: {r: 1, g: 0.33346856, b: 0.2205882, a: 1}
+    - _FadeColor: {r: 0.6530061, g: 0.7455778, b: 0.89705884, a: 1}
+    - _HighlightTint: {r: 1, g: 0.26870677, b: 0.26870677, a: 1}
     - _ShadowTint: {r: 0.50800174, g: 0.61652845, b: 0.7941176, a: 1}
     - _SpecularHighlightColor: {r: 0.9117647, g: 0.96713996, b: 1, a: 1}

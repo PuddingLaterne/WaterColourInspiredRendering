@@ -17,14 +17,17 @@ public class WaterColorPostProcessing : MonoBehaviour
     [Range(0, 1f)]
     public float Distortion = 0.5f;
     public bool BlurOutlines = true;
+    public bool BlurBackground = true;
 
     private Material mat;
     private OutlineRendererCamera outlineRenderer;
+    private BackgroundCamera background;
 
     public void Awake()
     {
         mat = new Material(Shader);
-        outlineRenderer = FindObjectOfType<OutlineRendererCamera>();
+        outlineRenderer = GetComponentInChildren<OutlineRendererCamera>();
+        background = GetComponentInChildren<BackgroundCamera>();
         SetShaderValues();
     }
 
@@ -35,25 +38,32 @@ public class WaterColorPostProcessing : MonoBehaviour
             SetShaderValues();
 
         mat.SetTexture("_OutlineTex", outlineRenderer.Target);
+        mat.SetTexture("_BackgroundTex", background.Target);
         Graphics.Blit(source, destination, mat);
     }
 
     private void SetShaderValues()
     {
-        if(BlurOutlines)
-        {
-            mat.EnableKeyword("OUTLINE_BLUR_ON");
-            mat.DisableKeyword("OUTLINE_BLUR_OFF");
-        }
-        else
-        {
-            mat.EnableKeyword("OUTLINE_BLUR_OFF");
-            mat.DisableKeyword("OUTLINE_BLUR_ON");
-        }
+        SetKeyword(BlurOutlines, "OUTLINE_BLUR_ON", "OUTLINE_BLUR_OFF");
+        SetKeyword(BlurBackground, "BG_BLUR_ON", "BG_BLUR_OFF");
         mat.SetTexture("_PaperTex", PaperTexture);
         mat.SetTexture("_PaperNormalTex", PaperNormal);
         mat.SetFloat("_Darkening", Darkening);
         mat.SetFloat("_MaxLuminance", MaxLuminance);
         mat.SetFloat("_Distortion", Distortion * 0.01f);
+    }
+
+    private void SetKeyword(bool isActive, string keywordOn, string keywordOff)
+    {
+        if (isActive)
+        {
+            mat.EnableKeyword(keywordOn);
+            mat.DisableKeyword(keywordOff);
+        }
+        else
+        {
+            mat.EnableKeyword(keywordOff);
+            mat.DisableKeyword(keywordOn);
+        }
     }
 }

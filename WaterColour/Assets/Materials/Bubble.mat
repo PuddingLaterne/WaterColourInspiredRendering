@@ -6,9 +6,9 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: WatercolorHills
-  m_Shader: {fileID: 4800000, guid: 1cb1d0014d9c3e047b952f19e46dff63, type: 3}
-  m_ShaderKeywords: 
+  m_Name: Bubble
+  m_Shader: {fileID: 4800000, guid: 4c1701a8cd1febb4ca1cb0df7ec45f6d, type: 3}
+  m_ShaderKeywords: COLOR_SIMPLE SPECULAR_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -63,8 +63,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _AdditionalNoiseInfluence: 0.234
-    - _BaseNoiseInfluence: 0.138
+    - _AdditionalNoiseInfluence: 0.5
+    - _BaseNoiseInfluence: 0.5
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -73,36 +73,36 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _HighlightSoftness: 0.311
-    - _HighlightThreshold: 0.83
-    - _HighlightTintStrength: 0.048
-    - _InnerLineBrightness: 0
-    - _IntensityInfluence: 0.522
-    - _MaxOutlineThickness: 0.0004
+    - _HighlightSoftness: 0.427
+    - _HighlightThreshold: 0.639
+    - _HighlightTintStrength: 0.357
+    - _InnerLineBrightness: 1
+    - _IntensityInfluence: 0.5
+    - _MaxOutlineThickness: 0.1
     - _Metallic: 0
-    - _MinOutlineThickness: 0
+    - _MinOutlineThickness: 0.05
     - _Mode: 0
     - _NoiseScale: 1
     - _OcclusionStrength: 1
     - _OuterLineBrightness: 1
-    - _OutlineOpacity: 0.327
-    - _OutlinePos: 0.449
+    - _OutlineOpacity: 1
+    - _OutlinePos: 0.686
     - _Parallax: 0.02
-    - _ShadowSoftness: 0.194
-    - _ShadowThreshold: 0.509
-    - _ShadowTintStrength: 0.572
+    - _ShadowSoftness: 0.27
+    - _ShadowThreshold: 0.269
+    - _ShadowTintStrength: 0.488
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SpecularSoftness: 0.1
-    - _SpecularThreshold: 0.8
+    - _SpecularSoftness: 0.064
+    - _SpecularThreshold: 0.526
     - _Specularity: 8
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.40657437, g: 0.58823526, b: 0.5807182, a: 1}
+    - _Color: {r: 0.8088235, g: 0.6390198, b: 0.27357268, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FadeColor: {r: 0.23356402, g: 0.28596622, b: 0.33088237, a: 0}
-    - _HighlightTint: {r: 1, g: 1, b: 1, a: 1}
-    - _ShadowTint: {r: 0.18382353, g: 0.28280544, b: 0.36764705, a: 0}
+    - _FadeColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _HighlightTint: {r: 1, g: 0.9136917, b: 0.72794116, a: 1}
+    - _ShadowTint: {r: 0.9411765, g: 0.603842, b: 0.5467128, a: 1}
     - _SpecularHighlightColor: {r: 1, g: 1, b: 1, a: 1}

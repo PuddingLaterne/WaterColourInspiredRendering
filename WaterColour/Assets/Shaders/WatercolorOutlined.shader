@@ -44,6 +44,7 @@
 			"RenderType" = "Opaque"
 			"LightMode" = "ForwardBase"
 			"Outline" = "Default"
+			"DisableBatching" = "True"
 		}
 		LOD 100
 
