@@ -198,7 +198,7 @@
 				color = lerp(color, _HighlightTint, _HighlightTintStrength * fog * max((intensity - 0.5), 0.0) * 2.0);
 				color = lerp(_ShadowTint, color, 1.0 - _ShadowTintStrength * fog * abs(min(intensity - 0.5, 0.0)) * 2.0);
 
-				color = changeDensity(color, 1.0 + ((1.0 - intensity - 0.5) * 2.0 * _IntensityInfluence * fog));
+				color = changeDensity(color, 1.0 + ((1.0 - intensity - 0.5) * 2.0 * _IntensityInfluence));
 
 				#ifdef SPECULAR_ON
 				fixed spec = specular(n, l, v) * shadow;

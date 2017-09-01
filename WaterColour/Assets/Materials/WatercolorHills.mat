@@ -73,24 +73,24 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _HighlightSoftness: 0.311
-    - _HighlightThreshold: 0.83
-    - _HighlightTintStrength: 0.048
+    - _HighlightSoftness: 0.224
+    - _HighlightThreshold: 0.953
+    - _HighlightTintStrength: 0.125
     - _InnerLineBrightness: 0
-    - _IntensityInfluence: 0.522
-    - _MaxOutlineThickness: 0.0004
+    - _IntensityInfluence: 0.201
+    - _MaxOutlineThickness: 0.1
     - _Metallic: 0
-    - _MinOutlineThickness: 0
+    - _MinOutlineThickness: 0.1
     - _Mode: 0
     - _NoiseScale: 1
     - _OcclusionStrength: 1
-    - _OuterLineBrightness: 1
-    - _OutlineOpacity: 0.327
-    - _OutlinePos: 0.449
+    - _OuterLineBrightness: 0
+    - _OutlineOpacity: 1
+    - _OutlinePos: 1
     - _Parallax: 0.02
-    - _ShadowSoftness: 0.194
-    - _ShadowThreshold: 0.509
-    - _ShadowTintStrength: 0.572
+    - _ShadowSoftness: 0.25
+    - _ShadowThreshold: 0.341
+    - _ShadowTintStrength: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SpecularSoftness: 0.1
@@ -100,9 +100,9 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.40657437, g: 0.58823526, b: 0.5807182, a: 1}
+    - _Color: {r: 0.32828718, g: 0.36263245, b: 0.4852941, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FadeColor: {r: 0.23356402, g: 0.28596622, b: 0.33088237, a: 0}
-    - _HighlightTint: {r: 1, g: 1, b: 1, a: 1}
+    - _FadeColor: {r: 0.17463237, g: 0.19755287, b: 0.2794118, a: 1}
+    - _HighlightTint: {r: 0.7647059, g: 1, b: 0.9529412, a: 1}
     - _ShadowTint: {r: 0.18382353, g: 0.28280544, b: 0.36764705, a: 0}
     - _SpecularHighlightColor: {r: 1, g: 1, b: 1, a: 1}
