@@ -6,14 +6,14 @@ public class OutlineRendererCamera : MonoBehaviour
 {
     public Shader OutlineShader;
 
-    public RenderTexture Target { get; private set; }
+    public RenderTexture Texture { get; private set; }
     private Camera cam;
 
     private void OnEnable()
     {
         AdjustCameraSettings();
         CreateRenderTexture();
-        cam.targetTexture = Target;
+        cam.targetTexture = Texture;
         cam.SetReplacementShader(OutlineShader, "Outline");
     }
 
@@ -27,12 +27,12 @@ public class OutlineRendererCamera : MonoBehaviour
 
     private void CreateRenderTexture()
     {
-        Target = new RenderTexture(Screen.width, Screen.height, 16, RenderTextureFormat.ARGB32);
-        Target.Create();
+        Texture = new RenderTexture(Screen.width, Screen.height, 16, RenderTextureFormat.ARGB32);
+        Texture.Create();
     }
 
     private void OnDisable()
     {
-        Target.Release();
+        Texture.Release();
     }
 }

@@ -26,16 +26,20 @@ public class WaterColorPostProcessing : MonoBehaviour
     [Header("Render Layers")]
     public bool BlurOutlines = true;
     public bool BlurBackground = true;
+    [Range(0, 1f)]
+    public float EffectVisibility = 0.5f;
 
     private Material mat;
-    private OutlineRendererCamera outlineRenderer;
-    private BackgroundCamera background;
+    private OutlineRendererCamera outlineLayer;
+    private WaterColorEffects effectLayer;
+    private BackgroundCamera backgroundLayer;
 
     public void Awake()
     {
         mat = new Material(Shader);
-        outlineRenderer = GetComponentInChildren<OutlineRendererCamera>();
-        background = GetComponentInChildren<BackgroundCamera>();
+        effectLayer = GetComponent<WaterColorEffects>();
+        outlineLayer = GetComponentInChildren<OutlineRendererCamera>();
+        backgroundLayer = GetComponentInChildren<BackgroundCamera>();
         SetShaderValues();
     }
 
@@ -45,8 +49,9 @@ public class WaterColorPostProcessing : MonoBehaviour
         if (UpdateAtRuntime)
             SetShaderValues();
 
-        mat.SetTexture("_OutlineTex", outlineRenderer.Target);
-        mat.SetTexture("_BackgroundTex", background.Target);
+        mat.SetTexture("_OutlineTex", outlineLayer.Texture);
+        mat.SetTexture("_BackgroundTex", backgroundLayer.Texture);
+        mat.SetTexture("_EffectTex", effectLayer.Texture);
         Graphics.Blit(source, destination, mat);
     }
 
@@ -65,6 +70,8 @@ public class WaterColorPostProcessing : MonoBehaviour
         mat.SetFloat("_BrighteningFadeStart", BrighteningFadeStart);
         mat.SetFloat("_BrighteningFadeEnd", BrighteningFadeEnd);
         mat.SetFloat("_BrighteningStrength", BrighteningStrength);
+
+        mat.SetFloat("_EffectVisibility", EffectVisibility);
     }
 
     private void SetKeyword(bool isActive, string keywordOn, string keywordOff)

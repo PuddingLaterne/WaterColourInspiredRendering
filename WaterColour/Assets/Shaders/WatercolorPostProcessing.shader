@@ -41,12 +41,13 @@
 			sampler2D _MainTex;
 			sampler2D _OutlineTex;
 			sampler2D _BackgroundTex;
+			sampler2D _EffectTex;
 			sampler2D _PaperTex;
 			sampler2D _PaperNormalTex;
 			fixed _MaxLuminance;
 			fixed _Darkening;
 			fixed _Distortion;
-
+			fixed _EffectVisibility;
 			fixed2 _BrightnessOrigin;
 			fixed _BrighteningFadeStart;
 			fixed _BrighteningFadeEnd;
@@ -76,6 +77,7 @@
 
 				fixed4 col = tex2D(_MainTex, distortedUV);
 				fixed4 colBG = fixed4(0.0, 0.0, 0.0, 0.0);
+				fixed4 colEffect = tex2D(_EffectTex, i.uv);
 
 				#ifdef BG_BLUR_ON
 				colBG = sampleAndInterpolate(_BackgroundTex, distortedUV);		
@@ -85,6 +87,7 @@
 				colBG = tex2D(_BackgroundTex, distortedUV);
 				#endif
 
+				colBG = lerp(colBG, colEffect, colEffect.a * _EffectVisibility);
 				col = lerp(colBG, col, col.a);
 
 				fixed outline;
@@ -111,7 +114,6 @@
 				brightening *= _BrighteningStrength;
 				
 				col = col - (col - pow(col, 2.0)) * (-brightening);
-
 				return col;
 			}
 			ENDCG

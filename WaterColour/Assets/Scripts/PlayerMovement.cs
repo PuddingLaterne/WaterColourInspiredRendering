@@ -35,8 +35,9 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             GameObject projectile = Instantiate(Projectile);
-            projectile.transform.position = (Vector2)transform.position + aimDirection * 0.2f;
+            projectile.transform.position = (Vector2)transform.position + aimDirection * 0.1f;
             projectile.transform.eulerAngles = transform.eulerAngles;
+            projectile.SetActive(true);
         }
     }
 

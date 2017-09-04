@@ -4,22 +4,22 @@ using UnityEngine;
 
 public class BackgroundCamera : MonoBehaviour
 {
-    public RenderTexture Target { get; private set; }
+    public RenderTexture Texture { get; private set; }
 
     private void OnEnable()
     {
         CreateRenderTexture();
-        GetComponent<Camera>().targetTexture = Target;
+        GetComponent<Camera>().targetTexture = Texture;
     }
 
     private void CreateRenderTexture()
     {
-        Target = new RenderTexture(Screen.width, Screen.height, 16, RenderTextureFormat.ARGB32);
-        Target.Create();
+        Texture = new RenderTexture(Screen.width, Screen.height, 16, RenderTextureFormat.ARGB32);
+        Texture.Create();
     }
 
     private void OnDisable()
     {
-        Target.Release();
+        Texture.Release();
     }
 }
